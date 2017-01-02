@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyRedirector.cs" />
     <Compile Include="Attributes\RedirectAttribute.cs" />
     <Compile Include="Attributes\RedirectMethodAttribute.cs" />
     <Compile Include="Attributes\RedirectReverseAttribute.cs" />
