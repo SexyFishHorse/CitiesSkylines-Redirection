@@ -14,58 +14,51 @@
             {
                 throw new ArgumentNullException("target");
             }
-
             if (source == null)
             {
                 return;
             }
-
             foreach (var element in source)
             {
                 target.Add(element);
             }
         }
 
-        public static IDictionary<MethodInfo, RedirectCallsState> RedirectAssembly()
+        public static Dictionary<MethodInfo, RedirectCallsState> RedirectAssembly()
         {
             var redirects = new Dictionary<MethodInfo, RedirectCallsState>();
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 redirects.AddRange(RedirectType(type));
             }
-
             return redirects;
         }
 
-        public static IDictionary<MethodInfo, RedirectCallsState> RedirectType(Type type, bool onCreated = false)
+        public static Dictionary<MethodInfo, RedirectCallsState> RedirectType(Type type, bool onCreated = false)
         {
             var redirects = new Dictionary<MethodInfo, RedirectCallsState>();
 
             var customAttributes = type.GetCustomAttributes(typeof(TargetTypeAttribute), false);
             if (customAttributes.Length != 1)
             {
-                throw new Exception("No target type specified for " + type.FullName + "!");
+                throw new Exception(string.Format("No target type specified for {0}!", type.FullName));
             }
-
             if (!GetRedirectedMethods<RedirectMethodAttribute>(type).Any() && !GetRedirectedMethods<RedirectReverseAttribute>(type).Any())
             {
-                throw new Exception("No redirects specified for " + type.FullName + "!");
+                throw new Exception(string.Format("No redirects specified for {0}!", type.FullName));
             }
-
             var targetType = ((TargetTypeAttribute)customAttributes[0]).Type;
             RedirectMethods(type, targetType, redirects, onCreated);
             RedirectReverse(type, targetType, redirects, onCreated);
-
             return redirects;
         }
 
-        public static void RevertRedirects(IDictionary<MethodInfo, RedirectCallsState> redirects)
+        public static void RevertRedirects(Dictionary<MethodInfo, RedirectCallsState> redirects)
         {
             if (redirects == null)
             {
                 return;
             }
-
             foreach (var kvp in redirects)
             {
                 RedirectionHelper.RevertRedirect(kvp.Key, kvp.Value);
@@ -96,7 +89,7 @@
         private static void RedirectMethod(
             Type targetType,
             MethodInfo method,
-            IDictionary<MethodInfo, RedirectCallsState> redirects,
+            Dictionary<MethodInfo, RedirectCallsState> redirects,
             bool reverse = false)
         {
             var tuple = RedirectMethod(targetType, method, reverse);
@@ -117,7 +110,6 @@
             {
                 types = parameters.Select(p => p.ParameterType).ToArray();
             }
-
             var originalMethod = targetType.GetMethod(
                 detour.Name,
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static,
@@ -126,18 +118,18 @@
                 null);
             var redirectCallsState =
                 reverse ? RedirectionHelper.RedirectCalls(detour, originalMethod) : RedirectionHelper.RedirectCalls(originalMethod, detour);
-
             return Tuple.New(reverse ? detour : originalMethod, redirectCallsState);
         }
 
         private static void RedirectMethods(
             Type type,
             Type targetType,
-            IDictionary<MethodInfo, RedirectCallsState> redirects,
+            Dictionary<MethodInfo, RedirectCallsState> redirects,
             bool onCreated)
         {
             foreach (var method in GetRedirectedMethods<RedirectMethodAttribute>(type, onCreated))
             {
+                //                UnityEngine.Debug.Log($"Redirecting {targetType.Name}#{method.Name}...");
                 RedirectMethod(targetType, method, redirects);
             }
         }
@@ -145,11 +137,12 @@
         private static void RedirectReverse(
             Type type,
             Type targetType,
-            IDictionary<MethodInfo, RedirectCallsState> redirects,
+            Dictionary<MethodInfo, RedirectCallsState> redirects,
             bool onCreated)
         {
             foreach (var method in GetRedirectedMethods<RedirectReverseAttribute>(type, onCreated))
             {
+                //                UnityEngine.Debug.Log($"Redirecting reverse {targetType.Name}#{method.Name}...");
                 RedirectMethod(targetType, method, redirects, true);
             }
         }

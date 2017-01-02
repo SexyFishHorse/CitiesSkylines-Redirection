@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class RedirectAttribute : Attribute
+    internal class RedirectAttribute : Attribute
     {
         protected RedirectAttribute(bool onCreated = false)
         {

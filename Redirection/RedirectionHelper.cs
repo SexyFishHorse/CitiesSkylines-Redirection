@@ -23,6 +23,13 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
     using System;
     using System.Reflection;
 
+    public struct RedirectCallsState
+    {
+        public byte a, b, c, d, e;
+
+        public ulong f;
+    }
+
     /// <summary>
     /// Helper class to deal with detours. This version is for Unity 5 x64 on Windows.
     /// We provide three different methods of detouring.
@@ -62,9 +69,9 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
         public static RedirectCallsState RedirectCalls(MethodInfo from, MethodInfo to)
         {
             // GetFunctionPointer enforces compilation of the method.
-            var fromPointer = from.MethodHandle.GetFunctionPointer();
-            var toPointer = to.MethodHandle.GetFunctionPointer();
-            return PatchJumpTo(fromPointer, toPointer);
+            var fptr1 = from.MethodHandle.GetFunctionPointer();
+            var fptr2 = to.MethodHandle.GetFunctionPointer();
+            return PatchJumpTo(fptr1, fptr2);
         }
 
         public static RedirectCallsState RevertJumpTo(IntPtr site, RedirectCallsState state)
@@ -74,35 +81,33 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
             {
                 var sitePtr = (byte*)site.ToPointer();
                 detourState = GetState(sitePtr);
-                *sitePtr = state.A; // mov r11, target
-                *(sitePtr + 1) = state.B;
-                *(ulong*)(sitePtr + 2) = state.F;
-                *(sitePtr + 10) = state.C; // jmp r11
-                *(sitePtr + 11) = state.D;
-                *(sitePtr + 12) = state.E;
+                *sitePtr = state.a; // mov r11, target
+                *(sitePtr + 1) = state.b;
+                *(ulong*)(sitePtr + 2) = state.f;
+                *(sitePtr + 10) = state.c; // jmp r11
+                *(sitePtr + 11) = state.d;
+                *(sitePtr + 12) = state.e;
             }
-
             return detourState;
         }
 
         public static void RevertRedirect(MethodInfo from, RedirectCallsState state)
         {
-            var fromPointer = from.MethodHandle.GetFunctionPointer();
-            RevertJumpTo(fromPointer, state);
+            var fptr1 = from.MethodHandle.GetFunctionPointer();
+            RevertJumpTo(fptr1, state);
         }
 
         private static unsafe RedirectCallsState GetState(byte* sitePtr)
         {
             var state = new RedirectCallsState
             {
-                A = *sitePtr,
-                B = *(sitePtr + 1),
-                C = *(sitePtr + 10),
-                D = *(sitePtr + 11),
-                E = *(sitePtr + 12),
-                F = *(ulong*)(sitePtr + 2)
+                a = *sitePtr,
+                b = *(sitePtr + 1),
+                c = *(sitePtr + 10),
+                d = *(sitePtr + 11),
+                e = *(sitePtr + 12),
+                f = *(ulong*)(sitePtr + 2)
             };
-
             return state;
         }
     }

@@ -3,9 +3,9 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class RedirectMethodAttribute : RedirectAttribute
+    internal class RedirectMethodAttribute : RedirectAttribute
     {
-        public RedirectMethodAttribute()
+        public RedirectMethodAttribute() : base(false)
         {
         }
 
