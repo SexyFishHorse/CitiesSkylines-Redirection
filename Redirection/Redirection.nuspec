@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>%id%</id>
-    <version>%version%</version>
-    <title>%title%</title>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
     <authors>Asser, sschoener, yenyang</authors>
     <owners>Asser</owners>
     <licenseUrl>https://sexyfishhorse.mit-license.org</licenseUrl>
     <projectUrl>https://github.com/SexyFishHorse/CitiesSkylines-Redirection</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>%description%</description>
+    <description>$description$</description>
     <copyright>Copyright 2017</copyright>
     <tags>detour redirectionhelper redirect redirection</tags>
   </metadata>
