@@ -62,9 +62,9 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
         public static RedirectCallsState RedirectCalls(MethodInfo from, MethodInfo to)
         {
             // GetFunctionPointer enforces compilation of the method.
-            var fptr1 = from.MethodHandle.GetFunctionPointer();
-            var fptr2 = to.MethodHandle.GetFunctionPointer();
-            return PatchJumpTo(fptr1, fptr2);
+            var fromPointer = from.MethodHandle.GetFunctionPointer();
+            var toPointer = to.MethodHandle.GetFunctionPointer();
+            return PatchJumpTo(fromPointer, toPointer);
         }
 
         public static RedirectCallsState RevertJumpTo(IntPtr site, RedirectCallsState state)
@@ -81,13 +81,14 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
                 *(sitePtr + 11) = state.D;
                 *(sitePtr + 12) = state.E;
             }
+
             return detourState;
         }
 
         public static void RevertRedirect(MethodInfo from, RedirectCallsState state)
         {
-            var fptr1 = from.MethodHandle.GetFunctionPointer();
-            RevertJumpTo(fptr1, state);
+            var fromPointer = from.MethodHandle.GetFunctionPointer();
+            RevertJumpTo(fromPointer, state);
         }
 
         private static unsafe RedirectCallsState GetState(byte* sitePtr)
@@ -101,6 +102,7 @@ namespace SexyFishHorse.CitiesSkylines.Redirection
                 E = *(sitePtr + 12),
                 F = *(ulong*)(sitePtr + 2)
             };
+
             return state;
         }
     }

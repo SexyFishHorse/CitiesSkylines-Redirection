@@ -17,6 +17,7 @@
                         .GetTypes()
                         .Where(t => t.GetCustomAttributes(typeof(TargetTypeAttribute), false).Length > 0)
                         .ToArray();
+
             foreach (var type in types)
             {
                 type.Redirect();

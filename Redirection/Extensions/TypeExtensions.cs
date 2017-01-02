@@ -6,8 +6,8 @@
 
     public static class TypeExtension
     {
-        private static readonly Dictionary<Type, Dictionary<MethodInfo, RedirectCallsState>> Redirects
-            = new Dictionary<Type, Dictionary<MethodInfo, RedirectCallsState>>();
+        private static readonly IDictionary<Type, IDictionary<MethodInfo, RedirectCallsState>> Redirects
+            = new Dictionary<Type, IDictionary<MethodInfo, RedirectCallsState>>();
 
         public static bool IsAnonymousType(this Type t)
         {

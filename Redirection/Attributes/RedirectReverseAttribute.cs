@@ -1,11 +1,11 @@
 ﻿namespace SexyFishHorse.CitiesSkylines.Redirection.Attributes
 {
     using System;
-
+    
     [AttributeUsage(AttributeTargets.Method)]
-    internal class RedirectReverseAttribute : RedirectAttribute
+    public class RedirectReverseAttribute : RedirectAttribute
     {
-        public RedirectReverseAttribute() : base(false)
+        protected RedirectReverseAttribute()
         {
         }
 
