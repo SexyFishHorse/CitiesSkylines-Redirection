@@ -5,6 +5,15 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redirection", "Redirection.csproj", "{48B2A3A8-3D23-4F59-ADDA-0022B95348FD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7896E1F8-882D-464A-8D8F-045A1FA5BBD1}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\CREDITS = ..\CREDITS
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		Redirection.nuspec = Redirection.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
