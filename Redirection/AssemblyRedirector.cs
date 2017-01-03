@@ -10,9 +10,9 @@
     {
         private static Type[] types;
 
-        public static void Deploy()
+        public static void Deploy(Assembly assembly)
         {
-            types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetCustomAttributes(typeof(TargetTypeAttribute), false).Length > 0).ToArray();
+            types = assembly.GetTypes().Where(t => t.GetCustomAttributes(typeof(TargetTypeAttribute), false).Length > 0).ToArray();
             foreach (var type in types)
             {
                 type.Redirect();
